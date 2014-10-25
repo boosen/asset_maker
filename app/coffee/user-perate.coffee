@@ -1,2 +1,2 @@
-$ -> 
-  console.log 'I am user operator'
+$ ->
+  return '123'
