@@ -43,7 +43,7 @@ module.exports = function(grunt) {
               src.replace(/(^|\n)[ \t]*('use strict'|"use strict");?\s*/g, '$1');
           },
         },
-        src: ['bower_components/jquery/dist/jquery.min.js', 'bower_components/jquery/dist/bootstrap.min.js'],
+        src: ['bower_components/jquery/dist/jquery.min.js', 'bower_components/jquery/distbootstrap.min.js'],
         dest: '.tmp/lib.js'
       },
     },
@@ -78,8 +78,21 @@ module.exports = function(grunt) {
         files: ['app/coffee/*.coffee'],
         tasks: ['coffee:default', 'uglify:coffee']
       }
+    },
+    copy: {
+      fonts: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: 'bower_components/bootstrap/dist',
+          dest: 'dist',
+          src: 'fonts/*'
+        }]
+      }
     }
   });
+  
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
