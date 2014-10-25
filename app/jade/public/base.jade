@@ -1,0 +1,41 @@
+doctype html
+html(lang="en")
+  head
+    block title
+      title Default tile
+    block css
+      link(href='style/lib.css')
+    <!--[if IE 8]>
+    script(src='//html5shiv.googlecode.com/svn/trunk/html5.js')
+    <![endif]-->
+  body
+    .blog-masthead
+      .container
+        - var bars = [{name:'home',href:'#', isCurrent:'active'}, {name:'New features',href:'#', isCurrent:''}, {name:'Press',href:'#', isCurrent:''}, {name:'New hires',href:'#', isCurrent:''}, {name:'About',href:'#', isCurrent:''}];
+        nav.blog-nav
+          each val, index in bars
+            a(href='#{val.href}' class='blog-nav-item #{val.isCurrent}') #{val.name}
+    .container
+      block blog-header
+        .blog-header
+          h1.blog-title The Bootstrap Blog
+          p.lead.blog-description
+        .row
+          div(class=['col-sm-8 blog-main']) 
+            block content
+
+          block sidebar
+            .col-sm-3.col-sm-offset-1.blog-sidebar
+              .sidebar-module.sidebar-module-inset
+                h4 About
+                p
+                  != 'Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.'
+              include archives.jade
+              include elsewhere.jade
+        .blog-footer
+          p
+            != 'Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.'
+          a(href='#') Back to top
+    script(src='js/lib.min.js')
+    script(src='js/main.min.js')
+    block scripts
