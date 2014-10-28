@@ -2,7 +2,8 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
-      js:['.tmp/*.js', 'dist/js/*.js', "!.tmp/*.min.js"]
+      js:['.tmp/*.js', 'dist/js/*.js', "!.tmp/*.min.js"],
+      css:['.tmp/*.css', 'dist/style/*.css', "!.tmp/*.min.js"]
     },
     jade: {
       compile: {
@@ -21,7 +22,7 @@ module.exports = function(grunt) {
     coffee: {
       default: {
         files: {
-          '.tmp/main.js': 'app/coffee/*.coffee' // 1:1 compile
+          '.tmp/js/main.js': 'app/coffee/*.coffee' // 1:1 compile
         }
       },
       glob_to_multiple: {
@@ -34,7 +35,7 @@ module.exports = function(grunt) {
       }
     },
     concat: {
-      dist: {
+      js: {
         options: {
           // Replace all 'use strict' statements in the code with a single one at the top
           banner: "'use strict';\n",
@@ -46,6 +47,18 @@ module.exports = function(grunt) {
         src: ['bower_components/jquery/dist/jquery.min.js', 'bower_components/jquery/distbootstrap.min.js'],
         dest: '.tmp/lib.js'
       },
+      css: {
+        options: {
+          // Replace all 'use strict' statements in the code with a single one at the top
+          banner: "/*<%= pkg.name > lib css*/"
+          // process: function(src, filepath) {
+          //   return '// Source: ' + filepath + '\n' +
+          //     src.replace(/(^|\n)[ \t]*('use strict'|"use strict");?\s*/g, '$1');
+          // },
+        },
+        src: ['bower_components/bootstrap/dist/css/bootstrap.min.css'],
+        dest: '.tmp/lib.css'
+      }
     },
     jshint: {
       options: {
@@ -67,7 +80,7 @@ module.exports = function(grunt) {
             beautify: true
           }
         },
-        files: [{'dist/js/main.min.js': '.tmp/main.js'}, {'dist/js/lib.min.js': '.tmp/lib.js'}]
+        files: [{'dist/js/main.min.js': '.tmp/js/main.js'}, {'dist/js/lib.min.js': '.tmp/lib.js'}]
       },
       coffee: {
         files: {'dist/js/main.min.js': '.tmp/main.js'}
@@ -89,9 +102,32 @@ module.exports = function(grunt) {
           src: 'fonts/*'
         }]
       }
+    },
+    compass: {
+      dist: {                   // Target
+        options: {              // Target options
+          outputStyle: 'expanded',
+          sassDir: 'app/sass/',
+          cssDir: '.tmp/css',
+          environment: 'production'
+        }
+      }
+    },
+    cssmin: {
+      withbanner: {
+        options: {
+          banner: '/* My minified css file */'
+        },
+        files: [
+          {'dist/style/main.min.css': ['.tmp/css/*.css']},
+          {'dist/style/lib.min.css': ['.tmp/lib.css']}
+        ]
+      }
     }
   });
   
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -101,5 +137,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.registerTask('default', ['jade']);
-  grunt.registerTask('jsmin', ['clean', 'coffee:default', 'concat', 'jshint', 'uglify:build']);
+  grunt.registerTask('jsbuild', ['clean:js', 'coffee:default', 'concat:js', 'jshint', 'uglify:build']);
+  grunt.registerTask('cssbuild', ['clean:css', 'concat:css', 'compass', 'cssmin:withbanner']);
 }
