@@ -11,8 +11,8 @@ This can compile jade, sass(compass), coffeescript by grunt.
 
 ######How to use it
 
-    grun jade
-    grun cssbuild
-    grun jsbuild
+    grunt jade
+    grunt cssbuild
+    grunt jsbuild
 
 you can have a look at director 'dist/'
